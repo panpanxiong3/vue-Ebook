@@ -1,15 +1,14 @@
 const book = {
   state: {
-    test: 1
+    fileNames: '', //文章路径
+    menuVisitor: false //是否显示标题栏
   },
   mutations: {
-    'SET_TEST': (state , newTest) => {
-      state.test = newTest
-    }
-  },
-  actions: {
-    setTest : ({ commit, state}, newTest) => {
-      return commit('SET_TEST', newTest)
+    'SET_FILENAME': (state, fileName) => {
+      state.fileNames = fileName //修改文章路径
+    },
+    'SET_MENUVISITOR': (state, menuVisitor) => {
+      state.menuVisitor = menuVisitor //修改是否显示标题栏
     }
   }
 };
