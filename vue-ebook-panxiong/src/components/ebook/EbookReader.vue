@@ -9,15 +9,17 @@
 <script>
 
   import Epub from 'epubjs'
-  import { eookMixin } from "../../unils/mixin";
+  import { eookMixin } from "../../utils/mixin";
   global.ePub = Epub;
     export default {
         name: "EbookReader",
         mixins: [ eookMixin ],
         methods: {
           initEpub() {
-            const baseUrl = 'http://192.168.1.15:7071/epub/' + this.fileNames + '.epub';
+            const baseUrl = 'http://192.168.1.15:7071/epub/' + this.fileName + '.epub';
+            console.log(baseUrl);
             this.book = new Epub(baseUrl);
+            this.setCurrentBook(this.book);
             this.rendition = this.book.renderTo('read', {
               width: window.innerWidth,
               height: window.innerHeight,
@@ -51,10 +53,14 @@
             this.hideTitleAndMenu();
           },
           showTitleAndMenu() {
-            this.setMenuVisitor(!this.menuVisitor);
+            this.setMenuVisible(!this.menuVisible);
+            this.setSettingVisible(-1);
+            this.setFontFamilyVisible(false);
           },
           hideTitleAndMenu(){
-            this.setMenuVisitor(false);
+            this.setSettingVisible(-1);
+            this.setFontFamilyVisible(false);
+            this.setMenuVisible(false);
           }
         },
         mounted() {

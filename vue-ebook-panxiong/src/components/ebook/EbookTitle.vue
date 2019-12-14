@@ -1,12 +1,12 @@
 <template>
   <transition name="slide-down">
-    <div class="title-wrapper" v-show="menuVisitor">
+    <div class="title-wrapper" v-show="menuVisible">
       <div class="left">
         <span class="icon-back" @click="back"></span>
       </div>
       <div class="right">
         <div class="icon-wrapper">
-          <span class="icon-share"></span>
+          <span class="icon-shelf"></span>
         </div>
         <div class="icon-wrapper">
           <span class="icon-cart"></span>
@@ -20,7 +20,7 @@
 </template>
 
 <script>
-   import { eookMixin } from "../../unils/mixin";
+   import { eookMixin } from "../../utils/mixin";
     export default {
       name: "EbookTitle",
       mixins: [ eookMixin ],

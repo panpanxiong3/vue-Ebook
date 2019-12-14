@@ -1,15 +1,4 @@
-@import 'reset';
-@import "minix";
-@import "transition";
-
-
-// 1rem = fontSize px
-// 1px = (1 / fontSize)rem
-
-
-.icon {
-  color: #333;
-  font-size: px2rem(20);
-}
-
-
+@import "./reset";
+@import "./mixin";
+@import "./flapCard";
+@import "./home";
