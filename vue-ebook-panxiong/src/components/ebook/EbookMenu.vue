@@ -17,23 +17,39 @@
       </div>
     </transition>
     <ebook-setting-font></ebook-setting-font>
+    <EbookSettingTheme></EbookSettingTheme>
   </div>
 
 </template>
 
 <script>
     import EbookSettingFont from "./EbookSettingFont";
+    import EbookSettingTheme from "./EbookSettingTheme";
     import { eookMixin } from "../../utils/mixin";
     export default {
         mixins: [ eookMixin ],
         name: "EbookMenu",
         methods: {
           showSetting(key){
-            this.settingVisible !== 0 ? this.setSettingVisible(key) : this.setSettingVisible(-1)
+            switch (key) {
+                case 0:
+                this.settingVisible !== 0 ? this.setSettingVisible(key) : this.setSettingVisible(-1);
+                break;
+              case 1:
+                this.settingVisible !== 1 ? this.setSettingVisible(key) : this.setSettingVisible(-1);
+                break;
+              case 2:
+                this.settingVisible !== 2 ? this.setSettingVisible(key) : this.setSettingVisible(-1);
+                break;
+              case 3:
+                this.settingVisible !== 3 ? this.setSettingVisible(key) : this.setSettingVisible(-1);
+                break;
+            }
           }
         },
         components: {
-          EbookSettingFont
+          EbookSettingFont,
+          EbookSettingTheme
         }
     }
 </script>

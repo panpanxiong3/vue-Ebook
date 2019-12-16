@@ -10,13 +10,52 @@
 
   import Epub from 'epubjs'
   import {eookMixin} from "../../utils/mixin";
-  import {getFontFamily, getFontSize, saveFontFamily, saveFontSize} from "../../utils/localStorage";
+  import {
+    getFontFamily,
+    getFontSize,
+    getTheme,
+    saveFontFamily,
+    saveFontSize,
+    saveTheme
+  } from "../../utils/localStorage";
+  import {addCss} from "../../utils/book";
 
   global.ePub = Epub;
   export default {
     name: "EbookReader",
     mixins: [eookMixin],
     methods: {
+      initFontSize () {
+        let fontSize = getFontSize (this.fileName);
+        if ( !fontSize) {
+          saveFontSize (this.fileName, this.defaultFontSize);
+        } else {
+          this.rendition.themes.fontSize (fontSize);
+          this.setDefaultFontSize (fontSize);
+        }
+      },
+      initFontFamily () {
+        let font = getFontFamily (this.fileName);
+        if ( !font) {
+          saveFontFamily (this.fileName, this.defaultFontFamily);
+        } else {
+          this.rendition.themes.font (font);
+          this.setDefaultFontFamily (font);
+        }
+      },
+      initTheme () {
+        let defaultTheme = getTheme (this.fileName);
+        if ( !defaultTheme) {
+          defaultTheme = this.themeList[ 0 ].name;
+          saveTheme (this.fileName, defaultTheme);
+        }else {
+          this.setDefaultTheme(defaultTheme);
+        }
+        this.themeList.forEach (theme => {
+          this.rendition.themes.register (theme.name, theme.style);
+        });
+        this.rendition.themes.select (defaultTheme);
+      },
       initEpub () {
         const baseUrl = 'http://192.168.1.15:7071/epub/' + this.fileName + '.epub';
         this.book = new Epub (baseUrl);
@@ -27,21 +66,10 @@
           method: 'default'// 微信的兼容性，可以在微信上正常使用
         });
         this.rendition.display ().then (() => {
-          let font = getFontFamily (this.fileName);
-          if ( !font) {
-            saveFontFamily (this.fileName, this.defaultFontFamily);
-          } else {
-            this.rendition.themes.font (font);
-            this.setDefaultFontFamily (font);
-          }
-
-          let fontSize = getFontSize (this.fileName);
-          if ( !fontSize) {
-            saveFontSize (this.fileName, this.defaultFontSize);
-          } else {
-            this.rendition.themes.fontSize (fontSize);
-            this.setDefaultFontSize (fontSize);
-          }
+          this.initFontSize ();
+          this.initFontFamily ();
+          this.initTheme ();
+          this.initGlobStyle ();
         });
         //手势操作
         this.rendition.on ('touchstart', event => {

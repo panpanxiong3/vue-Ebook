@@ -141,6 +141,6 @@ const messages = {
     minutes: '分钟',
     cancel: '取消'
   }
-}
+};
 
 export default messages

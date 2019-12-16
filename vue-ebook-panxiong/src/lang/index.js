@@ -4,13 +4,13 @@ import en from './en'
 import cn from './cn'
 import { getLocale, saveLocale } from '../utils/localStorage'
 
-Vue.use(VueI18n)
+Vue.use(VueI18n);
 
 const messages = {
   en, cn
-}
+};
 
-let locale = getLocale()
+let locale = getLocale();
 if (!locale) {
   locale = 'en';
   saveLocale(locale)
