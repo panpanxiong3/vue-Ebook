@@ -24,6 +24,8 @@ module.exports = {
     'camelcase':'off',
     'key-spacing':'off',
     'space-infix-ops':'off',
+    'object-curly-spacing':'off',
+    'func-call-spacing':'off',
     'semi': 0,
     "space-before-function-paren": 0,
   },

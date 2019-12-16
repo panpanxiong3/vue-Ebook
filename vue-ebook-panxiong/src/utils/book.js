@@ -14,4 +14,4 @@ export const FONT_FAMILY = [
   { font: 'Days One' },
   { font: 'Montserrat' },
   { font: 'Tangerine' }
-]
+];
