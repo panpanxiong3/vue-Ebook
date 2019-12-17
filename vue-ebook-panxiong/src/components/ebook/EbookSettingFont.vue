@@ -49,7 +49,7 @@
     methods: {
       setFontSize ( fontSize ) {
         saveFontSize (this.fileName, fontSize);
-        this.setDefaultFontSize ( fontSize );
+        this.setDefaultFontSize (fontSize);
         this.currentBook.rendition.themes.fontSize (fontSize);
       },
       showFontFamilyPopul () {

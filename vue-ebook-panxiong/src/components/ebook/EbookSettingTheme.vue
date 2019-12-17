@@ -26,7 +26,7 @@
         this.setDefaultTheme (theme.name).then (() => {
           this.currentBook.rendition.themes.select (this.defaultTheme);
           saveTheme (this.fileName, this.defaultTheme);
-          this.initGlobStyle();
+          this.initGlobStyle ();
         });
       }
     }
