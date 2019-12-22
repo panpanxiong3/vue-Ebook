@@ -36,19 +36,34 @@
   export default {
     name: "EbookSettingProgress",
     mixins: [eookMixin],
-    methods:{
-      onProgressChange(process){
+    methods: {
+      onProgressChange ( process ) {
+        this.setProgress (process).then (() => {
+          this.displayProgress ();
+          this.updateProgressBg ();
+        })
+      },
+      onProgressInput ( process ) {
+        this.setProgress (process).then (() => {
+          this.updateProgressBg();
+        })
+      },
+      updateProgressBg () {
+        this.$refs.progress.style.backgroundSize = `${this.progress}% 100%`
+      },
+      prevSection () {
 
       },
-      onProgressInput(process){
+      nextSection () {
 
       },
-      prevSection(){
-
-      },
-      nextSection(){
-
+      displayProgress () {
+        const cfi = this.currentBook.locations.cfiFromPercentage (this.progress / 100);
+        this.currentBook.rendition.display (cfi);
       }
+    },
+    updated () {
+      this.updateProgressBg();
     }
   }
 </script>
@@ -58,7 +73,7 @@
 
   .setting-wrapper {
     position: absolute;
-    bottom: px2rem(116);
+    bottom: px2rem(96);
     left: 0;
     z-index: 101;
     width: 100%;
@@ -70,7 +85,8 @@
       position: relative;
       width: 100%;
       height: 100%;
-      .read-time-wrapper{
+
+      .read-time-wrapper {
         position: absolute;
         left: 0;
         top: 0;
@@ -79,22 +95,24 @@
         font-size: px2rem(16);
         @include center;
       }
+
       .progress-wrapper {
         width: 100%;
         height: 100%;
         @include center;
         padding: 0 px2rem(15);
         box-sizing: border-box;
-        .progress-icon-wrapper{
+
+        .progress-icon-wrapper {
           font-size: px2rem(45);
         }
+
         .progress {
           width: 100%;
           -webkit-appearance: none;
           height: px2rem(2);
-          background: -webkit-linear-gradient(#999, #999) no-repeat, #ddd;
-          background-size: 0 100% !important;
           margin: 0 px2rem(20);
+
           &:focus {
             outline: none;
           }
