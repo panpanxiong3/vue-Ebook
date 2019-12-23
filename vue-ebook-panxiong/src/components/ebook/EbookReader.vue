@@ -12,7 +12,7 @@
   import {eookMixin} from "../../utils/mixin";
   import {
     getFontFamily,
-    getFontSize,
+    getFontSize, getLocation,
     getTheme,
     saveFontFamily,
     saveFontSize,
@@ -62,7 +62,8 @@
           height: window.innerHeight,
           method: 'default'// 微信的兼容性，可以在微信上正常使用
         });
-        this.rendition.display ().then (() => {
+        const location = getLocation (this.fileName);
+        this.renditionDisplay (location, () => {
           this.initFontSize ();
           this.initFontFamily ();
           this.initTheme ();
@@ -108,15 +109,20 @@
         this.book.ready.then (() => {
           return this.book.locations.generate (750 * ( window.innerWidth / 375 ) * ( getFontSize (this.fileName / 16) ))
         }).then (locations => {
-          this.setBookAvailable(true);
+          this.setBookAvailable (true);
+          this.refreshLocation ();
         })
       },
       prevPage () {
-        this.rendition.prev ();
+        this.rendition.prev ().then (() => {
+          this.refreshLocation ();
+        });
         this.hideTitleAndMenu ();
       },
       nextPage () {
-        this.rendition.next ();
+        this.rendition.next ().then (() => {
+          this.refreshLocation ();
+        });
         this.hideTitleAndMenu ();
       },
       showTitleAndMenu () {

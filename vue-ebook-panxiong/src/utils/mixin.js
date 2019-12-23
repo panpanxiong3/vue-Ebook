@@ -1,6 +1,6 @@
 import {mapGetters, mapActions} from "vuex";
 import {addCss, removeAllCss, themeList} from "./book";
-import {getTheme} from "./localStorage";
+import {getTheme, saveLocation} from "./localStorage";
 
 export const eookMixin = {
   computed: {
@@ -52,8 +52,8 @@ export const eookMixin = {
       'setIsBookmark'
     ]),
     initGlobStyle () {
-      removeAllCss();
-      let defTheme = getTheme();
+      removeAllCss ();
+      let defTheme = getTheme ();
       switch (this.defaultTheme) {
         case "Default":
           addCss (`${process.env.VUE_APP_RES_URL}/theme/theme_default.css`);
@@ -67,6 +67,27 @@ export const eookMixin = {
         case "Night":
           addCss (`${process.env.VUE_APP_RES_URL}/theme/theme_night.css`);
           break;
+      }
+    },
+    refreshLocation () {
+      const currentLocation = this.currentBook.rendition.currentLocation ();
+      const startCfi = currentLocation.start.cfi;
+      const progress = this.currentBook.locations.percentageFromCfi (startCfi);
+      this.setProgress (Math.floor (progress * 100));
+      this.setSection (currentLocation.start.index);
+      saveLocation (this.fileName, startCfi);
+    },
+    renditionDisplay ( target, cb ) {
+      if (target) {
+        this.currentBook.rendition.display (target).then (() => {
+          this.refreshLocation ();
+          if (cb) cb ();
+        })
+      } else {
+        this.currentBook.rendition.display ().then (() => {
+          this.refreshLocation ();
+          if (cb) cb ();
+        })
       }
     },
   }
