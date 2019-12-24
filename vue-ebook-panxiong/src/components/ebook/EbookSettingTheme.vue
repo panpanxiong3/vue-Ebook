@@ -14,7 +14,6 @@
 
 <script>
   import {eookMixin} from "../../utils/mixin";
-  import {themeList} from "../../utils/book";
   import {saveTheme} from "../../utils/localStorage";
 
   export default {

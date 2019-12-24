@@ -1,3 +1,6 @@
+import {getReadTime} from "./localStorage";
+import {eookMixin} from "./mixin";
+
 export const Font_SIZE_LIST = [
   {fontSize: 12},
   {fontSize: 14},
@@ -110,4 +113,17 @@ export function removeAllCss () {
   removeCss (`${process.env.VUE_APP_RES_URL}/theme/theme_gold.css`);
   removeCss (`${process.env.VUE_APP_RES_URL}/theme/theme_eye.css`);
   removeCss (`${process.env.VUE_APP_RES_URL}/theme/theme_night.css`);
+}
+
+export function getReadTimeByMinute ( fileName ) {
+  const readTime = getReadTime (fileName);
+  if ( !readTime) {
+    return 0
+  } else {
+    return Math.ceil (readTime / 60);
+  }
+}
+
+export function flatten ( array ) {
+  return [].concat(array.map (item => [].concat (item, ...flatten(item.subitems))));
 }

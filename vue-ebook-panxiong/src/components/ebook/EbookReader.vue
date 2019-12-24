@@ -18,7 +18,7 @@
     saveFontSize,
     saveTheme
   } from "../../utils/localStorage";
-  import {addCss} from "../../utils/book";
+  import {flatten} from "../../utils/book";
 
   global.ePub = Epub;
   export default {
@@ -99,10 +99,37 @@
           }
         });
       },
+      parseBook () {
+        //获取阅读器封面
+        this.book.loaded.cover.then (cover => {
+          this.book.archive.createUrl (cover).then (url => {
+            this.setCover (url);
+          })
+        });
+        //获取图书基本信息
+        this.book.loaded.metadata.then (metadata => {
+          this.setMetadata (metadata);
+        });
 
+
+        //获取图书列表信息
+        this.book.loaded.navigation.then (nav => {
+          const navItem = flatten (nav.toc);
+
+          function find ( item, level = 0 ) {
+            return !item.parent ? level : find (navItem.filter (parentItem => parentItem.id === item.parent)[ 0 ], ++level);
+          }
+
+          navItem.forEach (item => {
+            item.level = find (item);
+          });
+          this.setNavigation(navItem);
+        })
+      },
       initEpub () {
         const baseUrl = 'http://192.168.1.15:7071/epub/' + this.fileName + '.epub';
         this.book = new Epub (baseUrl);
+        this.parseBook ();
         this.setCurrentBook (this.book);
         this.initRendition ();
         this.initGestart ();
@@ -130,11 +157,6 @@
         this.setSettingVisible (-1);
         this.setFontFamilyVisible (false);
       },
-      hideTitleAndMenu () {
-        this.setSettingVisible (-1);
-        this.setFontFamilyVisible (false);
-        this.setMenuVisible (false);
-      }
     },
     mounted () {
       const fileName = this.$route.params.fileName.split ('|').join ('/'); //修改路由参数

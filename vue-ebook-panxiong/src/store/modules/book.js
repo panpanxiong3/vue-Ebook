@@ -14,7 +14,7 @@ const book = {
     currentBook: null,
     navigation: null,
     cover: null,
-    metadata: null,
+    metadata: '',
     paginate: '',
     pagelist: null,
     offsetY: 0,

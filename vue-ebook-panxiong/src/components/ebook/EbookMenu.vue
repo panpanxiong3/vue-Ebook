@@ -17,8 +17,9 @@
       </div>
     </transition>
     <ebook-setting-font></ebook-setting-font>
-    <EbookSettingTheme></EbookSettingTheme>
+    <ebook-setting-theme></ebook-setting-theme>
     <ebook-setting-progress></ebook-setting-progress>
+    <EbookSlide></EbookSlide>
   </div>
 
 </template>
@@ -27,6 +28,7 @@
     import EbookSettingFont from "./EbookSettingFont";
     import EbookSettingTheme from "./EbookSettingTheme";
     import EbookSettingProgress from "./EbookSettingProgress";
+    import EbookSlide from "./EbookSlide";
     import { eookMixin } from "../../utils/mixin";
     export default {
         mixins: [ eookMixin ],
@@ -52,7 +54,8 @@
         components: {
           EbookSettingFont,
           EbookSettingTheme,
-          EbookSettingProgress
+          EbookSettingProgress,
+          EbookSlide
         }
     }
 </script>
