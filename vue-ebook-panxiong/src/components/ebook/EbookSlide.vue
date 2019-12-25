@@ -2,8 +2,8 @@
   <transition name="fade">
     <div class="slide-content-wrapper" v-show="menuVisible && settingVisible===3">
       <transition name="fade-slide-right">
-        <div class="content">
-          <div class="content-page-wrapper">
+        <div class="content" v-show="settingVisible===3">
+          <div class="content-page-wrapper" v-if="bookAvailable">
             <div class="content-page">
               <component :is="currentTab === 1?content:contentMark"></component>
             </div>
@@ -16,9 +16,12 @@
               </div>
             </div>
           </div>
+          <div class="content-empty" v-else>
+            <ebook-loading></ebook-loading>
+          </div>
         </div>
       </transition>
-      <div class="content-bg" @click="hideTitleAndMenu">{{getReadTimeText}}</div>
+      <div class="content-bg" @click="hideTitleAndMenu"></div>
     </div>
   </transition>
 </template>
@@ -26,9 +29,11 @@
 <script>
   import {eookMixin} from "../../utils/mixin";
   import EbookSlideContents from "./EbookSlideContents";
+  import EbookLoading from "./EbookLoading";
 
   export default {
     name: "EbookSlide",
+    components: {EbookLoading},
     mixins: [eookMixin],
     data () {
       return {
@@ -87,6 +92,11 @@
             font-size: px2rem(24);
           }
         }
+      }
+      .content-empty{
+        width: 100%;
+        height: 100%;
+        @include center;
       }
     }
 

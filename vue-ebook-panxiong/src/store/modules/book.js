@@ -12,7 +12,7 @@ const book = {
     section: 0,
     isPaginating: true,
     currentBook: null,
-    navigation: null,
+    navigation: '',
     cover: null,
     metadata: '',
     paginate: '',

@@ -8,12 +8,14 @@
         <input type="text"
                class="slide-contents-search-input"
                :placeholder="$t('book.searchHint')"
+               v-model="searchText"
+               @keyup.enter.exact="seach"
                @click="showSearchVisible(true)">
       </div>
       <div class="slide-contents-search-cancel" v-if='searchVisible' @click="hideSearchVisible">{{$t('book.cancel')}}
       </div>
     </div>
-    <div class="slide-contents-book-wrapper">
+    <div class="slide-contents-book-wrapper" v-if="!searchVisible">
       <div class="slide-contents-book-img-wrapper">
         <img :src="cover" class="slide-contents-book-img">
       </div>
@@ -32,11 +34,16 @@
         <div class="slide-contents-book-time">{{getReadTimeText}}</div>
       </div>
     </div>
-    <scroll class="slide-contents-list" :top="108" :bottom="40.5">
+    <scroll class="slide-contents-list" :top="108" :bottom="40.5" v-show="!searchVisible">
       <div class="slide-contents-item" v-for="(item,index) in navigation" :key="index">
         <span class="slide-contents-items-label" :style="contItemStyle(item)"
               :class="{'selected': section === index}" @click="switchChapters(item[0].href)">{{item[0].label}}</span>
         <span class="slide-contents-items-page"></span>
+      </div>
+    </scroll>
+    <scroll class="slide-search-list" :top="42" :bottom="20.5" v-show="searchVisible">
+      <div class="slide-search-item" v-for="(item,index) in searchList" :key="index" v-html="item.excerpt"
+           @click="switchChapters(item.cfi,true)">
       </div>
     </scroll>
   </div>
@@ -52,7 +59,9 @@
     mixins: [eookMixin],
     data () {
       return {
-        searchVisible: false
+        searchVisible: false,
+        searchList: null,
+        searchText: ''
       }
     },
     methods: {
@@ -61,19 +70,46 @@
       },
       hideSearchVisible () {
         this.searchVisible = false;
+        this.searchList = null;
+        this.searchText = '';
       },
       contItemStyle ( item ) {
         return {
           marginLeft: `${px2rem (item.level * 15)}rem`
         }
       },
-      switchChapters(navigation){
-        this.renditionDisplay(navigation);
-        this.hideTitleAndMenu ();
+      switchChapters ( navigation, highLight = false ) {
+        this.renditionDisplay (navigation, () => {
+          this.hideTitleAndMenu ();
+          if (highLight) {
+            this.currentBook.rendition.annotations.highlight (navigation);
+          }
+        });
+      },
+      doSearch ( q ) {
+        return Promise.all (
+          this.currentBook.spine.spineItems.map (item => item.load (this.currentBook.load.bind (this.currentBook)).then (item.find.bind (item, q)).finally (item.unload.bind (item)))
+        ).then (results => Promise.resolve ([].concat.apply ([], results)));
+      },
+      seach () {
+        if (this.searchText !== '' && this.searchText.length > 0) {
+          this.currentBook.ready.then (() => {
+            this.doSearch (this.searchText).then (result => {
+              this.searchList = result;
+              this.searchList.map (item => {
+                item.excerpt = item.excerpt.replace (this.searchText, `<span class="content-search-text">${this.searchText}</span>`);
+                return item;
+              });
+            })
+          })
+        }
       }
     },
     components: {
       Scroll
+    },
+    mounted () {
+
     }
   }
 </script>
@@ -195,15 +231,33 @@
           font-size: px2rem(14);
           line-height: px2rem(25);
           @include ellipsis;
+
           &.selected {
             color: #0070ff;
           }
         }
 
 
-
         .slide-contents-items-page {
 
+        }
+      }
+    }
+
+    .slide-search-list {
+      width: 100%;
+      padding: 0 px2rem(15);
+      box-sizing: border-box;
+
+      .slide-search-item {
+        font-size: px2rem(14);
+        line-height: px2rem(30);
+        padding: px2rem(40) 0;
+        box-sizing: border-box;
+        @include ellipsis2(4);
+
+        .content-search-text {
+          color: #0070ff;
         }
       }
     }
