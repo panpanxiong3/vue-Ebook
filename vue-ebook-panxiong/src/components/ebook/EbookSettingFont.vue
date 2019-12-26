@@ -71,7 +71,7 @@
     display: flex;
     flex-direction: column;
     left: 0;
-    z-index: 101;
+    z-index: 200;
     width: 100%;
     height: px2rem(145);
     background: white;

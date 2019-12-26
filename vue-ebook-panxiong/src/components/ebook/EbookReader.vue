@@ -3,6 +3,7 @@
     <div id="read">
 
     </div>
+    <div class="ebook-reader-mask" @click="onMaskClick" @touchmove="move" @touchend="moveEnd" @touchstart="moveStart"></div>
   </div>
 </template>
 
@@ -25,6 +26,43 @@
     name: "EbookReader",
     mixins: [eookMixin],
     methods: {
+      move ( e ) {
+        let offsetY = 0;
+        if (this.firstOffsetY) {
+          offsetY = e.changedTouches[ 0 ].clientY - this.firstOffsetY;
+          this.setOffsetY (offsetY);
+        } else {
+          this.firstOffsetY = e.changedTouches[ 0 ].clientY;
+        }
+        e.preventDefault ();
+        e.stopPropagation ();
+      },
+      moveStart ( e ) {
+        this.touchStartX = e.changedTouches[ 0 ].clientX;
+        this.touchStartTime = e.timeStamp;
+      },
+      moveEnd ( e ) {
+        this.setOffsetY (0);
+        this.firstOffsetY = 0;
+        const offsetX = e.changedTouches[ 0 ].clientX - this.touchStartX;
+        const touchTime = e.timeStamp - this.touchStartTime;
+        if (touchTime < 500 && offsetX > 40) {
+          this.prevPage ();
+        } else if (touchTime < 500 && offsetX < -40) {
+          this.nextPage ();
+        }
+      },
+      onMaskClick ( e ) {
+        const offsetX = e.offsetX;
+        const width = window.innerWidth;
+        if (offsetX > 0 && offsetX < width * 0.3) {
+          this.prevPage ();
+        } else if (offsetX > 0 && offsetX > width * 0.7) {
+          this.nextPage ();
+        } else {
+          this.showTitleAndMenu ();
+        }
+      },
       initFontSize () {
         let fontSize = getFontSize (this.fileName);
         if ( !fontSize) {
@@ -123,7 +161,7 @@
           navItem.forEach (item => {
             item.level = find (item);
           });
-          this.setNavigation(navItem);
+          this.setNavigation (navItem);
         })
       },
       initEpub () {
@@ -132,7 +170,7 @@
         this.parseBook ();
         this.setCurrentBook (this.book);
         this.initRendition ();
-        this.initGestart ();
+        //this.initGestart ();
         this.book.ready.then (() => {
           return this.book.locations.generate (750 * ( window.innerWidth / 375 ) * ( getFontSize (this.fileName / 16) ))
         }).then (locations => {
@@ -167,6 +205,22 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  @import "../../assets/styles/global";
 
+  .ebook-reader {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    .ebook-reader-mask {
+      position: absolute;
+      z-index: 150;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+    }
+  }
 </style>
