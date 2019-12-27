@@ -29,6 +29,7 @@ module.exports = {
     'no-undef':'off',
     'no-multiple-empty-lines':'off',
     'no-unreachable':'off',
+    'no-useless-return':'off',
     'semi': 0,
     "space-before-function-paren": 0,
   },

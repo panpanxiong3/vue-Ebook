@@ -1,9 +1,11 @@
 <template>
   <div class="ebook" ref="ebook">
+    <ebook-header></ebook-header>
     <ebook-title></ebook-title>
     <ebook-reader></ebook-reader>
     <ebook-menu></ebook-menu>
     <ebook-book-mark></ebook-book-mark>
+    <ebook-footer></ebook-footer>
   </div>
 </template>
 
@@ -12,6 +14,8 @@
   import EbookTitle from "../../components/ebook/EbookTitle";
   import EbookMenu from "../../components/ebook/EbookMenu";
   import EbookBookMark from "../../components/ebook/EbookBookMark";
+  import EbookHeader from "../../components/ebook/EbookHeader";
+  import EbookFooter from "../../components/ebook/EbookFooter";
   import {getReadTime, saveReadTime} from "../../utils/localStorage";
   import {eookMixin} from "../../utils/mixin";
 
@@ -22,7 +26,9 @@
       EbookReader,
       EbookTitle,
       EbookMenu,
-      EbookBookMark
+      EbookBookMark,
+      EbookHeader,
+      EbookFooter
     },
     watch: {
       offsetY ( v ) {

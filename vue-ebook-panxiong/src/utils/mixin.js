@@ -1,6 +1,6 @@
 import {mapGetters, mapActions} from "vuex";
 import {addCss, removeAllCss, themeList, getReadTimeByMinute} from "./book";
-import {getTheme, saveLocation} from "./localStorage";
+import {getBookmark, getTheme, saveLocation} from "./localStorage";
 
 
 export const eookMixin = {
@@ -30,8 +30,11 @@ export const eookMixin = {
       return themeList (this)
     },
     getReadTimeText () {
-      return this.$t ('book.haveRead').replace ('$1', getReadTimeByMinute(this.fileName));
+      return this.$t ('book.haveRead').replace ('$1', getReadTimeByMinute (this.fileName));
     },
+    getSectionName () {
+      return this.section ? this.navigation[ this.section ][0].label : '';
+    }
   },
   methods: {
     ...mapActions ([
@@ -75,12 +78,22 @@ export const eookMixin = {
     },
     refreshLocation () {
       const currentLocation = this.currentBook.rendition.currentLocation ();
-      if(currentLocation && currentLocation.start){
+      if (currentLocation && currentLocation.start) {
         const startCfi = currentLocation.start.cfi;
         const progress = this.currentBook.locations.percentageFromCfi (startCfi);
         this.setProgress (Math.floor (progress * 100));
         this.setSection (currentLocation.start.index);
         saveLocation (this.fileName, startCfi);
+        const bookmark = getBookmark (this.fileName);
+        if (bookmark) {
+          if (bookmark.some (item => item.cfi === startCfi)) {
+            this.setIsBookmark (true);
+          } else {
+            this.setIsBookmark (false)
+          }
+        } else {
+          this.setIsBookmark (false);
+        }
       }
     },
     renditionDisplay ( target, cb ) {

@@ -1,5 +1,6 @@
 import {getReadTime} from "./localStorage";
 import {eookMixin} from "./mixin";
+import {realPx} from "./utils";
 
 export const Font_SIZE_LIST = [
   {fontSize: 12},
@@ -28,6 +29,8 @@ export function themeList ( vue ) {
         body: {
           'color': '#4c5059',
           'background': '#cecece',
+          'padding-top': `${realPx(48)}px !important`,
+          'padding-bottom':`${realPx(48)}px !important`
         },
         img: {
           'width': '100%'
@@ -44,6 +47,8 @@ export function themeList ( vue ) {
         body: {
           'color': '#5c5b56',
           'background': '#c6c2b6',
+          'padding-top': `${realPx(48)}px !important`,
+          'padding-bottom':`${realPx(48)}px !important`
         },
         img: {
           'width': '100%'
@@ -60,6 +65,8 @@ export function themeList ( vue ) {
         body: {
           'color': '#404c42',
           'background': '#a9c1a9',
+          'padding-top': `${realPx(48)}px !important`,
+          'padding-bottom':`${realPx(48)}px !important`
         },
         img: {
           'width': '100%'
@@ -76,6 +83,8 @@ export function themeList ( vue ) {
         body: {
           'color': '#cecece',
           'background': '#000000',
+          'padding-top': `${realPx(48)}px !important`,
+          'padding-bottom':`${realPx(48)}px !important`
         },
         img: {
           'width': '100%'

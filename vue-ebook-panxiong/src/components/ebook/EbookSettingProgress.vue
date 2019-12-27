@@ -38,12 +38,6 @@
   export default {
     name: "EbookSettingProgress",
     mixins: [eookMixin],
-    computed: {
-      getSectionName () {
-        return this.section ? this.navigation[ this.section ][0].label : '';
-      },
-
-    },
     methods: {
       onProgressChange ( process ) {
         this.setProgress (process).then (() => {

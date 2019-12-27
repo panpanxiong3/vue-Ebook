@@ -16,6 +16,7 @@
   import BookMark from "../common/BookMark";
   import {eookMixin} from "../../utils/mixin";
   import {px2rem, realPx} from "../../utils/utils";
+  import {getBookmark, saveBookmark} from "../../utils/localStorage";
 
   export default {
     name: "EbookBookMark",
@@ -38,13 +39,13 @@
         return {
           position: 'fixed',
           right: `${px2rem (45)}px`,
-          top: `${this.height}px`
+          top: 0
         }
       }
     },
     watch: {
       offsetY ( v ) {
-        if (this.bookAvailable && !this.menuVisible ) {
+        if (this.bookAvailable && !this.menuVisible) {
           if (v >= this.height && v < this.threshold) {
             this.beforeThreshold (v);
           } else if (v >= this.threshold) {
@@ -55,12 +56,51 @@
             this.restore ()
           }
         }
+      },
+      isBookmark ( isBookMark ) {
+        this.isFlexed = isBookMark;
+        if (isBookMark) {
+          this.markColor = '#0070ff';
+        } else {
+          this.markColor = '#333333';
+        }
       }
     },
     components: {
       BookMark
     },
     methods: {
+      addBookMark () {
+        this.bookmark = getBookmark (this.fileName);
+        if ( !this.bookmark) {
+          this.bookmark = [];
+        }
+        const currentLocation = this.currentBook.rendition.currentLocation ();
+        const cfiBase = currentLocation.start.cfi.replace (/!.*/, '');
+        const cfiStart = currentLocation.start.cfi.replace (/.*!/, '').replace (/\)$/, '');
+        const cfiEnd = currentLocation.end.cfi.replace (/.*!/, '').replace (/\)$/, '');
+        const cfiRange = `${cfiBase}!,${cfiStart},${cfiEnd})`;
+        this.currentBook.getRange (cfiRange).then (range => {
+          const text = range.toString ().replace (/\s\s/g, '');
+          this.bookmark.map (item => {
+            if (item.cfi === currentLocation.start.cfi) return;
+          });
+          this.bookmark.push ({
+            cfi: currentLocation.start.cfi,
+            text: text
+          });
+          saveBookmark (this.fileName, this.bookmark);
+        })
+      },
+      removeBookMark () {
+        const currentLocation = this.currentBook.rendition.currentLocation ();
+        const cfi = currentLocation.start.cfi;
+        this.bookmark = getBookmark (this.fileName);
+        if (this.bookmark) {
+          saveBookmark (this.fileName, this.bookmark.filter (item => item.cfi !== cfi));
+          this.setIsBookmark (false);
+        }
+      },
       restore () {
         //归位：状态4
         setTimeout (() => {
@@ -69,9 +109,11 @@
         }, 200);
         if (this.isFlexed) {
           this.setIsBookmark (true);
-          this.flexStyle.top=`${this.height}px`;
+          this.flexStyle.top = `${this.height}px`;
+          this.addBookMark ();
         } else {
           this.setIsBookmark (false);
+          this.removeBookMark ()
         }
       },
       beforeHeight () {
@@ -90,13 +132,12 @@
         //未到达临界状态 ,
         this.$refs.ebookBookmark.style.top = `${-v}px`;
         this.beforeHeight ();
-        this.flexStyle.top=`${this.height - 28}px`;
+        this.flexStyle.top = `${this.height - 28}px`;
         const iconDown = this.$refs.iconDown;
         if (iconDown.style.transform === 'rotate(180deg)') {
           iconDown.style.transform = 'rotate(0deg)';
         }
       },
-
       afterThreshold ( v ) {
         //超越临界状态
         this.$refs.ebookBookmark.style.top = `${-v}px`;
@@ -104,12 +145,12 @@
           this.text = this.$t ('book.releaseDeleteMark');
           this.markColor = '#333333';
           this.isFlexed = false;
-          this.flexStyle.top=`${this.height - 28}px`;
+          this.flexStyle.top = `${this.height - 28}px`;
         } else {
           this.text = this.$t ('book.releaseAddMark');
           this.markColor = '#0070ff';
           this.isFlexed = true;
-          this.flexStyle.top=`${this.height}px`;
+          this.flexStyle.top = `${this.height}px`;
         }
         const iconDown = this.$refs.iconDown;
         if (iconDown.style.transform === '' || iconDown.style.transform === 'rotate(0deg)') {

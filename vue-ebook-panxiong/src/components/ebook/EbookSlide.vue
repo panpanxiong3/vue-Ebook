@@ -30,6 +30,7 @@
   import {eookMixin} from "../../utils/mixin";
   import EbookSlideContents from "./EbookSlideContents";
   import EbookLoading from "./EbookLoading";
+  import EbookSlideBookmark from "./EbookSlideBookmark";
 
   export default {
     name: "EbookSlide",
@@ -39,14 +40,14 @@
       return {
         currentTab: 1,
         content: EbookSlideContents,
-        contentMark: null
+        contentMark: EbookSlideBookmark
       }
     },
     methods: {
       selectTab ( tab ) {
         this.currentTab = tab;
       }
-    }
+    },
   }
 </script>
 
@@ -93,7 +94,8 @@
           }
         }
       }
-      .content-empty{
+
+      .content-empty {
         width: 100%;
         height: 100%;
         @include center;
