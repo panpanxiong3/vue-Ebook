@@ -3,7 +3,8 @@
     <div id="read">
 
     </div>
-    <div class="ebook-reader-mask" @click="onMaskClick" @touchmove="move" @touchend="moveEnd" @touchstart="moveStart"></div>
+    <div class="ebook-reader-mask" @click="onMaskClick" @touchmove="move" @touchend="moveEnd" @touchstart="moveStart"
+         @mousemove.left="onMouseMove" @mousedown.left="onMouseEnter" @mouseup.left="onMouseEnd"></div>
   </div>
 </template>
 
@@ -26,6 +27,44 @@
     name: "EbookReader",
     mixins: [eookMixin],
     methods: {
+      // 1- 鼠标进入
+      // 2- 鼠标进入后的移动
+      // 3- 鼠标从移动状态松手
+      // 4- 鼠标还原
+      onMouseMove ( e ) {
+        if (this.moveState === 1) {
+          this.moveState = 2
+        } else if (this.moveState === 2) {
+          let offsetY = 0;
+          if (this.firstOffsetY) {
+            offsetY = e.clientY - this.firstOffsetY;
+            this.setOffsetY (offsetY);
+          } else {
+            this.firstOffsetY = e.clientY;
+          }
+        }
+        e.preventDefault ();
+        e.stopPropagation ();
+      },
+      onMouseEnter ( e ) {
+        this.moveState = 1;
+        this.moveStateTime = e.timeStamp;
+        e.preventDefault ();
+        e.stopPropagation ();
+      },
+      onMouseEnd ( e ) {
+        if (this.moveState === 2) {
+          this.setOffsetY (0);
+          this.firstOffsetY = 0;
+          this.moveState = 3;
+        };
+        const time = e.timeStamp - this.moveStateTime;
+        if (time <= 200) {
+          this.moveState = 4;
+        }
+        e.preventDefault ();
+        e.stopPropagation ();
+      },
       move ( e ) {
         let offsetY = 0;
         if (this.firstOffsetY) {
@@ -53,6 +92,9 @@
         }
       },
       onMaskClick ( e ) {
+        if (this.moveState && ( this.moveState === 2 || this.moveState === 3 )) {
+          return;
+        }
         const offsetX = e.offsetX;
         const width = window.innerWidth;
         if (offsetX > 0 && offsetX < width * 0.3) {
