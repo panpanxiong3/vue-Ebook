@@ -33,7 +33,7 @@
     },
     methods: {
       handleScroll ( e ) {
-        const offsetY = e.target.scrollTop || window.pageYOffset || document.body.scrollTop
+        const offsetY = e.target.scrollTop || window.pageYOffset || document.body.scrollTop;
         this.$emit ('onScroll', offsetY)
       },
       scrollTo ( x, y ) {

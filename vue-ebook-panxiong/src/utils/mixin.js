@@ -2,6 +2,21 @@ import {mapGetters, mapActions} from "vuex";
 import {addCss, removeAllCss, themeList, getReadTimeByMinute} from "./book";
 import {getBookmark, getTheme, saveLocation} from "./localStorage";
 
+export const storeHomeMixin={
+  computed: {
+    ...mapGetters([
+      'offsetY',
+      'hotSearchOffsetY'
+    ])
+  },
+  methods: {
+    ...mapActions([
+      'setOffsetY',
+      'setHotSearchOffsetY'
+    ])
+  }
+};
+
 
 export const eookMixin = {
   computed: {
