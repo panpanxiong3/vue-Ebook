@@ -6,7 +6,7 @@
           <div class="title-icon-text-wrapper">
             <span class="title-text ">{{$t('home.title')}}</span>
           </div>
-          <div class="title-icon-shake-wrapper">
+          <div class="title-icon-shake-wrapper" @click="showFlapCard">
             <span class="icon-shake icon"></span>
           </div>
         </div>
@@ -61,6 +61,9 @@
       }
     },
     methods: {
+      showFlapCard () {
+        this.setFlapCardVisible (true);
+      },
       back () {
         this.hideHotSearchVisible ();
       },
