@@ -1,10 +1,5 @@
 @import "mixin";
 
-$firstShowTime: .3s;
-$pointShowTime: .75s;
-$bookShowTime: .3s;
-
-
 $color-green: rgb(59, 201, 22);
 $color-pink: rgb(255, 102, 159);
 $color-blue: rgb(74, 171, 255);
@@ -38,7 +33,7 @@ $moves: (
 @mixin move($index) {
   $item: nth($moves, $index);
   $keyframesName: "move" + $index;
-  $animationTime: $pointShowTime;
+  $animationTime: .75s;
   $animationType: linear;
   $animationIterator: 1;
   $width: map-get($item, width);
