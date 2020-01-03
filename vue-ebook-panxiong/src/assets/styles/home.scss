@@ -1,16 +1,16 @@
 @import "./mixin";
 
-$text-large: px2rem(18);
-$text-big: px2rem(16);
-$text-medium: px2rem(14);
-$text-small: px2rem(12);
-$text-tiny: px2rem(10);
+$text-large: px2rem(36);
+$text-big: px2rem(32);
+$text-medium: px2rem(28);
+$text-small: px2rem(26);
+$text-tiny: px2rem(20);
 
 $text-large-lh: px2rem(20);
-$text-big-lh: px2rem(18);
-$text-medium-lh: px2rem(16);
-$text-small-lh: px2rem(15);
-$text-tiny-lh: px2rem(12);
+$text-big-lh: px2rem(36);
+$text-medium-lh: px2rem(32);
+$text-small-lh: px2rem(30);
+$text-tiny-lh: px2rem(24);
 
 $text-big-max-height3: px2rem(54);
 $text-medium-max-height3: px2rem(48);
@@ -19,8 +19,8 @@ $text-big-max-height2: px2rem(36);
 $text-medium-max-height2: px2rem(32);
 $text-medium-max-height: px2rem(16);
 $text-small-max-height2: px2rem(30);
-$text-small-max-height: px2rem(15);
-$text-tiny-max-height: px2rem(12);
+$text-small-max-height: px2rem(45);
+$text-tiny-max-height: px2rem(28);
 
 .title-big {
   line-height: $text-big-lh;

@@ -2,20 +2,29 @@ import {mapGetters, mapActions} from "vuex";
 import {addCss, removeAllCss, themeList, getReadTimeByMinute} from "./book";
 import {getBookmark, getTheme, saveLocation} from "./localStorage";
 
-export const storeHomeMixin={
+export const storeHomeMixin = {
   computed: {
-    ...mapGetters([
+    ...mapGetters ([
       'offsetY',
       'hotSearchOffsetY',
       'flapCardVisible'
     ])
   },
   methods: {
-    ...mapActions([
+    ...mapActions ([
       'setOffsetY',
       'setHotSearchOffsetY',
       'setFlapCardVisible'
-    ])
+    ]),
+    showBookDetail ( book ) {
+      this.$router.push ({
+        path: '/store/detail',
+        query: {
+          fileName: book.fileName,
+          category: book.category
+        }
+      })
+    },
   }
 };
 
@@ -50,7 +59,7 @@ export const eookMixin = {
       return this.$t ('book.haveRead').replace ('$1', getReadTimeByMinute (this.fileName));
     },
     getSectionName () {
-      return this.section ? this.navigation[ this.section ][0].label : '';
+      return this.section ? this.navigation[ this.section ][ 0 ].label : '';
     }
   },
   methods: {

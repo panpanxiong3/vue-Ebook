@@ -57,7 +57,8 @@
           this.setOffsetY (0);
           this.firstOffsetY = 0;
           this.moveState = 3;
-        };
+        }
+        ;
         const time = e.timeStamp - this.moveStateTime;
         if (time <= 200) {
           this.moveState = 4;
@@ -207,7 +208,7 @@
         })
       },
       initEpub () {
-        const baseUrl = 'http://192.168.1.15:7071/epub/' + this.fileName + '.epub';
+        const baseUrl = `${process.env.VUE_APP_EPUB_URL}/${this.fileName}.epub`;
         this.book = new Epub (baseUrl);
         this.parseBook ();
         this.setCurrentBook (this.book);
