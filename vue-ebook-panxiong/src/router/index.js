@@ -6,7 +6,7 @@ Vue.use (VueRouter);
 const routes = [
   {
     path: '/',
-    redirect: '/store/home'
+    redirect: '/store'
   },
   {
     path: '/ebook',
@@ -24,7 +24,12 @@ const routes = [
   {
     path: '/store',
     component: () => import('../views/store/index'),
+    redirect: '/store/shelf',
     children: [
+      {
+        path: 'shelf',
+        component: () => import('../views/store/StoreShelf')
+      },
       {
         path: 'home',
         component: () => import('../views/store/storeHome')

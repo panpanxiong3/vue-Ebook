@@ -1,0 +1,80 @@
+<template>
+  <div class="shelf-title">
+    <div class="shelf-title-wrapper">
+      <span class="shelf-title-text">{{$t('shelf.title')}}</span>
+      <span class="shelf-title-sub-text">{{selectedText}}</span>
+    </div>
+    <div class="shelf-title-btn-wrapper shelf-title-left">
+      <span class="shelf-title-btn-text ">{{$t('shelf.clearCache')}}</span>
+    </div>
+    <div class="shelf-title-btn-wrapper shelf-title-right">
+      <span class="shelf-title-btn-text ">{{$t('shelf.edit')}}</span>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: "ShelfTitle",
+    computed: {
+      selectedText () {
+        return this.$t ('shelf.selectBook')
+      }
+    }
+  }
+</script>
+
+<style scoped rel="stylesheet/scss" lang="scss">
+  @import "../../assets/styles/global";
+
+  .shelf-title {
+    position: relative;
+    width: 100%;
+    height: px2rem(82);
+    background-color: white;
+
+    .shelf-title-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: px2rem(82);
+      @include columnCenter;
+
+      .shelf-title-text {
+        font-size: px2rem(20);
+        line-height: px2rem(40);
+        font-weight: bold;
+        color: #333333;
+      }
+
+      .shelf-title-sub-text {
+        font-size: px2rem(16);
+        color: #333333;
+      }
+    }
+
+    .shelf-title-btn-wrapper {
+      position: absolute;
+      top: 0;
+      box-sizing: border-box;
+      height: 100%;
+      @include center;
+
+      .shelf-title-btn-text {
+        font-size: px2rem(14);
+        color: #666666;
+      }
+
+      &.shelf-title-left {
+        left: 0;
+        padding-left: px2rem(30);
+      }
+
+      &.shelf-title-right {
+        right: 0;
+        padding-right: px2rem(30);
+      }
+    }
+  }
+</style>

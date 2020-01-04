@@ -77,7 +77,7 @@
       left: 0;
       z-index: 100;
       width: 100%;
-      height: px2rem(42);
+      height: px2rem(104);
       font-size: px2rem(16);
       color: #333;
       @include center;
