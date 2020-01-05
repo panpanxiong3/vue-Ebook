@@ -142,3 +142,22 @@ export const eookMixin = {
     }
   }
 };
+
+export const storeShelfMixin = {
+  computed: {
+    ...mapGetters ([
+      'isEditMode',
+      'shelfList',
+      'shelfSelected',
+      'shelfTitleVisible'
+    ])
+  },
+  methods: {
+    ...mapActions ([
+      'setIsEditMode',
+      'setShelfTitleVisible',
+      'setShelfList',
+      'setShelfSelected'
+    ])
+  }
+};
