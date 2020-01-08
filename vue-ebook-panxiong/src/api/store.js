@@ -24,3 +24,10 @@ export function list () {
     url: `${process.env.VUE_APP_BASE_URL}/book/list`,
   })
 }
+
+export function shelf () {
+  return axios ({
+    method: 'get',
+    url: `/book/shelf`,
+  })
+}
