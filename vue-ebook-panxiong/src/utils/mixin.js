@@ -1,6 +1,7 @@
 import {mapGetters, mapActions} from "vuex";
 import {addCss, removeAllCss, themeList, getReadTimeByMinute} from "./book";
 import {getBookmark, getTheme, saveLocation} from "./localStorage";
+import {gotoBookDetail} from "./store";
 
 export const storeHomeMixin = {
   computed: {
@@ -17,13 +18,7 @@ export const storeHomeMixin = {
       'setFlapCardVisible'
     ]),
     showBookDetail ( book ) {
-      this.$router.push ({
-        path: '/store/detail',
-        query: {
-          fileName: book.fileName,
-          category: book.category
-        }
-      })
+      gotoBookDetail (this, book)
     },
   }
 };
@@ -160,6 +155,10 @@ export const storeShelfMixin = {
       'setShelfList',
       'setShelfSelected',
       'setOffsetY'
-    ])
-  }
+    ]),
+    showBookDetail ( book ) {
+      gotoBookDetail (this, book)
+    },
+  },
+
 };

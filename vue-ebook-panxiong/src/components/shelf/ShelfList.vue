@@ -2,6 +2,9 @@
   <div class="shelf-list">
     <div class="shelf-list--item-wrapper" v-for="item in shelfList " :key="item.id" :style="{height: itemHeight}">
       <shelf-item :data="item"></shelf-item>
+      <div class="shelf-list-title-wrapper">
+        <span class="shelf-list-title title-small">{{item.title}}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -42,6 +45,11 @@
       width: 33.33%;
       padding: px2rem(30);
       box-sizing: border-box;
+      margin-bottom: px2rem(45);
+
+      .shelf-list-title-wrapper {
+        margin-top: px2rem(20);
+      }
     }
   }
 </style>

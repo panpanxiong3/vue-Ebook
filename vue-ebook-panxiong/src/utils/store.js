@@ -84,7 +84,7 @@ export function appendAddToShelf(list) {
   list.push({
     id: -1,
     type: 3
-  })
+  });
   return list
 }
 
