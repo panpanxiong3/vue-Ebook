@@ -34,7 +34,7 @@
     methods: {
       onClickItem () {
         if (this.isEditMode) {
-          this.data.selected = !this.data.selected
+          this.data.selected = !this.data.selected;
           if (this.data.selected) {
             this.shelfSelected.pushWithOutDuplicate (this.data)
           } else {
@@ -50,6 +50,9 @@
           }
         }
       }
+    },
+    mounted () {
+      console.log (this.data);
     }
   }
 </script>
