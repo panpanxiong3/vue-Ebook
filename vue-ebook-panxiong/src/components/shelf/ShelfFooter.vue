@@ -20,7 +20,9 @@
 
 <script>
   import {storeShelfMixin} from "../../utils/mixin";
-  import {saveBookShelf} from "../../utils/localStorage";
+  import {removeLocalStorage, saveBookShelf} from "../../utils/localStorage";
+  import {download, shelf} from "../../api/store";
+  import {removeLocalForage} from "../../utils/localForage";
 
   export default {
     name: "ShelfFooter",
@@ -85,7 +87,45 @@
             break;
         }
       },
-      downloadSelectedBook ( book ) {
+      async downloadSelectedBook () {
+        for (let i = 0; i < this.shelfSelected.length; i++) {
+          await this.downloadBook (this.shelfSelected[ i ]).then (book => {
+            book.cache = true;
+          })
+        }
+      },
+      downloadBook ( book ) {
+        let text = '';
+        const toast = this.toast ({
+          text
+        });
+        toast.continueShow ();
+        return new Promise (( resolve, reject ) => {
+          download (book, () => {
+            toast.remove ();
+            resolve (book)
+          }, progressEvent => {
+            const process = Math.floor (progressEvent.loaded / progressEvent.total * 100) + '%';
+            text = this.$t ('shelf.progressDownload').replace ('$1', `${book.fileName}.epub(${process})`);
+            toast.updateText (text);
+          })
+        })
+      },
+      removeSelectedBook () {
+        Promise.all (this.shelfSelected.map (book => this.removeBook (book))).then (books => {
+          books.map (book => {
+            book.cache = false;
+          });
+          saveBookShelf (this.shelfList);
+          this.simpToast (this.$t ('shelf.removeDownloadTitle'));
+        })
+      },
+      removeBook ( book ) {
+        return new Promise (( resolve, reject ) => {
+          removeLocalStorage (`${book.categoryText}/${book.fileName}`);
+          removeLocalForage (`${book.fileName}`, resolve, reject);
+          resolve (book)
+        })
       },
       hidePopup () {
         this.popupMenu.hide ()
@@ -116,23 +156,15 @@
           this.simpToast (this.$t ('shelf.closePrivateSuccess'))
         }
       },
-      setDownload () {
-        let isDownload;
+      async setDownload () {
         if (this.isDownload) {
-          isDownload = false;
+          this.removeSelectedBook ();
         } else {
-          isDownload = true;
+          await this.downloadSelectedBook ();
+          saveBookShelf (this.shelfList);
+          this.simpToast (this.$t ('shelf.setDownloadSuccess'))
         }
-        this.shelfSelected.forEach (book => {
-          book.cache = isDownload;
-        });
-        this.downloadSelectedBook ();
         this.onComplete ();
-        if (isDownload) {
-          this.simpToast (this.$t ('shelf.setDownloadSuccess'));
-        } else {
-          this.simpToast (this.$t ('shelf.removeDownloadSuccess'));
-        }
       },
       setRemoveSelect () {
         this.shelfSelected.forEach (selected => {

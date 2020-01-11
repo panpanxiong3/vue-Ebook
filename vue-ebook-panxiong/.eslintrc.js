@@ -31,6 +31,7 @@ module.exports = {
     'no-unreachable': 'off',
     'no-useless-return': 'off',
     'comma-spacing': 'off',
+    'no-new': 'off',
     'semi': 0,
     "space-before-function-paren": 0,
   },

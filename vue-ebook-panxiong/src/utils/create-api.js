@@ -19,9 +19,11 @@ Vue.mixin ({
       })
     },
     simpToast ( text ) {
-      this.toast ({
+      const toast = this.toast ({
         text: text
-      }).show ();
+      });
+      toast.show ();
+      toast.updateText (text);
     }
   }
 });
