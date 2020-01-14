@@ -59,7 +59,7 @@
   .ebook-popup-list {
     position: absolute;
     background-color: white;
-    bottom: 0;
+    bottom: px2rem(152);
     left: 0;
     z-index: 300;
     width: 100%;

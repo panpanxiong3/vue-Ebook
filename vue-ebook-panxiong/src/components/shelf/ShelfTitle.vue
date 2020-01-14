@@ -18,6 +18,8 @@
 
 <script>
   import {storeShelfMixin} from "../../utils/mixin";
+  import {clearLocalForage} from "../../utils/localForage";
+  import {clearLocalStorage} from "../../utils/localStorage";
 
   export default {
     name: "ShelfTitle",
@@ -48,12 +50,17 @@
           this.setShelfSelected ([]);
           this.shelfList.forEach (item => {
             item.isSelected = false;
-          })
+          });
         }
         this.setIsEditMode ( !this.isEditMode);
       },
       clearCache () {
-        console.log ('clear Cache');
+        clearLocalForage ();
+        clearLocalStorage ();
+        this.setShelfList ([]);
+        this.setShelfSelected ([]);
+        this.getShelfList ();
+        this.simpToast (this.$t ('shelf.clearCacheSuccess'));
       }
     }
   }

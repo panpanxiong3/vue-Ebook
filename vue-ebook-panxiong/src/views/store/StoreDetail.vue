@@ -291,7 +291,6 @@
           }).then (response => {
             if (response.status === 200 && response.data.error_code === 0 && response.data.data) {
               const data = response.data.data
-              console.log (data);
               // 保存电子书详情数据
               this.bookItem = data
               // 获取封面数据

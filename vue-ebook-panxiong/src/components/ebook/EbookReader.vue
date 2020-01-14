@@ -21,6 +21,7 @@
     saveTheme
   } from "../../utils/localStorage";
   import {flatten} from "../../utils/book";
+  import {getLocalForage} from "../../utils/localForage";
 
   global.ePub = Epub;
   export default {
@@ -240,9 +241,21 @@
       },
     },
     mounted () {
-      const fileName = this.$route.params.fileName.split ('|').join ('/'); //修改路由参数
-      this.setFileName (fileName).then (() => { //修改vuex 变量['fileNames']，并且异步调用函数
-        this.initEpub ();//调用函数
+      const books = this.$route.params.fileName.split ('|');
+      const fileName = books[ 1 ];
+      getLocalForage (fileName, ( err, blob ) => {
+        if ( !err && blob) {
+          console.log ('找到离线缓存数据');
+          this.setFileName (books.join ('/')).then (() => {
+            this.initEpub (blob);
+          })
+        } else {
+          console.log ('在线获取缓存数据');
+          this.setFileName (books.join ('/')).then (() => { //修改vuex 变量['fileNames']，并且异步调用函数
+            const url = process.env.VUE_APP_RES_URL + '/epub/' + this.fileName + '.epub';
+            this.initEpub (url);//调用函数
+          });
+        }
       });
     }
   }

@@ -27,7 +27,6 @@
     mixins: [eookMixin],
     methods: {
       back () {
-        console.log(111);
         this.$router.go (-1);
       }
     }

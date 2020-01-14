@@ -2,7 +2,8 @@
   <div class="shelf-item " :class="{'shelf-item-shadow':data.type===1 || data.type===2}" @click="onClickItem">
     <component class="shelf-item-comp" :class="{'is-edit':isEditMode && data.type ===2 }" :is="item"
                :data="data"></component>
-    <div class="icon-selected" :class="{'is-selected':data.selected}" v-show="data.type===1 && isEditMode"></div>
+    <div class="icon-selected" :class="{'is-selected':selected}" v-show="data.type===1 && isEditMode">
+    </div>
   </div>
 </template>
 
@@ -16,6 +17,9 @@
   export default {
     name: "ShelfItem",
     mixins: [storeShelfMixin],
+    props: {
+      data: Object
+    },
     data () {
       return {
         book: ShelfItemImage,
@@ -23,12 +27,19 @@
         add: ShelfItemAdd
       }
     },
-    props: {
-      data: Object
+    watch: {
+      isEditMode ( boolean ) {
+        if (boolean) {
+          this.data.selected = false;
+        }
+      }
     },
     computed: {
       item () {
         return this.data.type === 1 ? this.book : ( this.data.type === 2 ? this.category : this.add );
+      },
+      selected () {
+        return this.data.selected;
       }
     },
     methods: {

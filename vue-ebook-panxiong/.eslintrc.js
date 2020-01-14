@@ -32,6 +32,7 @@ module.exports = {
     'no-useless-return': 'off',
     'comma-spacing': 'off',
     'no-new': 'off',
+    'vue/no-use-v-if-with-v-for': 'off',
     'semi': 0,
     "space-before-function-paren": 0,
   },

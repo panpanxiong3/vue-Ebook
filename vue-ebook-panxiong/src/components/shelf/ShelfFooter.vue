@@ -104,7 +104,7 @@
           download (book, () => {
             toast.remove ();
             resolve (book)
-          }, progressEvent => {
+          }, reject, progressEvent => {
             const process = Math.floor (progressEvent.loaded / progressEvent.total * 100) + '%';
             text = this.$t ('shelf.progressDownload').replace ('$1', `${book.fileName}.epub(${process})`);
             toast.updateText (text);
@@ -252,6 +252,7 @@
             this.showDownLoad ();
             break;
           case 3:
+            this.groupDialog ().show ();
             break;
           case 4:
             this.showRemove ();

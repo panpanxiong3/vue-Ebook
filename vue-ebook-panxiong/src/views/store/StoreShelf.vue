@@ -18,6 +18,7 @@
   import ShelfList from "../../components/shelf/ShelfList";
   import {appendAddToShelf} from "../../utils/store";
   import ShelfFooter from "../../components/shelf/ShelfFooter";
+  import {getBookShelf, saveBookShelf} from "../../utils/localStorage";
 
   export default {
     name: "StoreShelf",
@@ -44,11 +45,18 @@
     },
     methods: {
       getShelfList () {
-        shelf ().then (response => {
-          if (response.status === 200 && response.data && response.data.bookList) {
-            this.setShelfList (appendAddToShelf (response.data.bookList));
-          }
-        })
+        let shelfList = getBookShelf ();
+        if ( !shelfList) {
+          shelf ().then (response => {
+            if (response.status === 200 && response.data && response.data.bookList) {
+              shelfList = appendAddToShelf (response.data.bookList);
+              saveBookShelf (shelfList);
+              this.setShelfList (shelfList);
+            }
+          })
+        } else {
+          this.setShelfList (shelfList);
+        }
       },
       onScroll ( offsetY ) {
         this.setOffsetY (offsetY);
