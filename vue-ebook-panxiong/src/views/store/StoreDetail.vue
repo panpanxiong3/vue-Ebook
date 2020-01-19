@@ -82,7 +82,8 @@
   import {detail} from '../../api/store'
   import {px2rem, realPx} from '../../utils/utils'
   import {removeFromBookShelf, addToShelf} from '../../utils/store'
-  import {getBookShelf, saveBookShelf} from '../../utils/localStorage'
+  import {getBookShelf, saveBookShelf,} from '../../utils/localStorage'
+  import {getLocalForage} from "../../utils/localForage";
   import Epub from 'epubjs'
 
   global.ePub = Epub

@@ -88,8 +88,8 @@
     },
     methods: {
       show () {
-        this.ifNewGroup = this.showNewGroup
-        this.newGroupName = this.groupName
+        this.ifNewGroup = this.showNewGroup;
+        this.newGroupName = this.groupName;
         this.$refs.dialog.show ()
       },
       hide () {
@@ -125,23 +125,12 @@
             group.itemList.forEach (( item, index ) => {
               item.id = index + 1
             });
-            this.simpleToast (this.$t ('shelf.moveBookInSuccess').replace ('$1', group.title));
+            this.simpToast (this.$t ('shelf.moveBookInSuccess').replace ('$1', group.title));
             this.onComplete ()
           })
       },
       moveOutFromGroup () {
-        this.setShelfList (this.shelfList.map (book => {
-          if (book.type === 2 && book.itemList) {
-            book.itemList = book.itemList.filter (subbook => !subbook.selected);
-          }
-          return book;
-        })).then (() => {
-          const list = computeId (appendAddToShelf ([].concat (removeAddFromShelf (this.shelfList), ...this.shelfSelected)));
-          this.setShelfList (list).then (() => {
-            this.simpToast (this.$t ('shelf.moveBookOutSuccess'));
-            this.onComplete (list);
-          })
-        })
+        this.moveOutOfGroup (this.onComplete);
       },
       createNewGroup () {
         if ( !this.newGroupName || this.newGroupName.length === 0) {
@@ -159,10 +148,11 @@
             type: 2
           };
           let list = removeAddFromShelf (this.shelfList)
-          list.push (group)
-          list = appendAddToShelf (list)
+          list.push (group);
+          list = appendAddToShelf (list);
           this.setShelfList (list).then (() => {
-            this.moveToGroup (group)
+            this.moveToGroup (group);
+            this.onComplete ()
           })
         }
       },

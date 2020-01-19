@@ -48,6 +48,10 @@ const routes = [
       }
     ]
   },
+  {
+    path: '/speaking',
+    component: () => import('../views/store/StoreSpeaking')
+  }
 ];
 
 const router = new VueRouter ({
