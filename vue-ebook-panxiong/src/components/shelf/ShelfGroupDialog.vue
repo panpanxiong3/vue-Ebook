@@ -37,9 +37,9 @@
 
 <script>
   import EbookDialog from '../common/Dialog'
-  import { storeShelfMixin } from '../../utils/mixin'
-  import { removeAddFromShelf, appendAddToShelf } from '../../utils/store'
-  import { saveBookShelf } from '../../utils/localStorage'
+  import {storeShelfMixin} from '../../utils/mixin'
+  import {removeAddFromShelf, appendAddToShelf, computeId} from '../../utils/store'
+  import {saveBookShelf} from '../../utils/localStorage'
 
   export default {
     name: 'group-dialog',
@@ -55,110 +55,121 @@
       groupName: String
     },
     computed: {
-      isInGroup() {
+      isInGroup () {
         return this.currentType === 2
       },
-      defaultCategory() {
+      defaultCategory () {
         return [
           {
-            title: this.$t('shelf.newGroup'),
+            title: this.$t ('shelf.newGroup'),
             edit: 1
           },
           {
-            title: this.$t('shelf.groupOut'),
+            title: this.$t ('shelf.groupOut'),
             edit: 2
           }
         ]
       },
-      category() {
-        return this.shelfList.filter(item => item.type === 2)
+      category () {
+        return this.shelfList.filter (item => item.type === 2)
       },
-      categoryList() {
+      categoryList () {
         return [...this.defaultCategory, ...this.category]
       },
-      title() {
-        return !this.ifNewGroup ? this.$t('shelf.moveBook') : this.$t('shelf.newGroup')
+      title () {
+        return !this.ifNewGroup ? this.$t ('shelf.moveBook') : this.$t ('shelf.newGroup')
       }
     },
-    data() {
+    data () {
       return {
         ifNewGroup: false,
         newGroupName: ''
       }
     },
     methods: {
-      show() {
+      show () {
         this.ifNewGroup = this.showNewGroup
         this.newGroupName = this.groupName
-        this.$refs.dialog.show()
+        this.$refs.dialog.show ()
       },
-      hide() {
-        this.$refs.dialog.hide()
-        setTimeout(() => {
+      hide () {
+        this.$refs.dialog.hide ()
+        setTimeout (() => {
           this.ifNewGroup = false
         }, 200)
       },
-      onGroupClick(item) {
+      onGroupClick ( item ) {
         if (item.edit && item.edit === 1) {
           this.ifNewGroup = true
         } else if (item.edit && item.edit === 2) {
-          this.moveOutFromGroup(item)
+          this.moveOutFromGroup (item)
         } else {
-          this.moveToGroup(item)
+          this.moveToGroup (item)
         }
       },
-      clear() {
+      clear () {
         this.newGroupName = ''
       },
-      moveToGroup(group) {
-        this.setShelfList(this.shelfList
-          .filter(book => {
+      moveToGroup ( group ) {
+        this.setShelfList (this.shelfList
+          .filter (book => {
             if (book.itemList) {
-              book.itemList = book.itemList.filter(subBook => this.shelfSelected.indexOf(subBook) < 0)
+              book.itemList = book.itemList.filter (subBook => this.shelfSelected.indexOf (subBook) < 0)
             }
-            return this.shelfSelected.indexOf(book) < 0
+            return this.shelfSelected.indexOf (book) < 0
           }))
-          .then(() => {
+          .then (() => {
             if (group && group.itemList) {
               group.itemList = [...group.itemList, ...this.shelfSelected]
             }
-            group.itemList.forEach((item, index) => {
+            group.itemList.forEach (( item, index ) => {
               item.id = index + 1
-            })
-            this.simpleToast(this.$t('shelf.moveBookInSuccess').replace('$1', group.title))
-            this.onComplete()
+            });
+            this.simpleToast (this.$t ('shelf.moveBookInSuccess').replace ('$1', group.title));
+            this.onComplete ()
           })
       },
-      moveOutFromGroup() {
-        this.moveOutOfGroup(this.onComplete)
+      moveOutFromGroup () {
+        this.setShelfList (this.shelfList.map (book => {
+          if (book.type === 2 && book.itemList) {
+            book.itemList = book.itemList.filter (subbook => !subbook.selected);
+          }
+          return book;
+        })).then (() => {
+          const list = computeId (appendAddToShelf ([].concat (removeAddFromShelf (this.shelfList), ...this.shelfSelected)));
+          this.setShelfList (list).then (() => {
+            this.simpToast (this.$t ('shelf.moveBookOutSuccess'));
+            this.onComplete (list);
+          })
+        })
       },
-      createNewGroup() {
-        if (!this.newGroupName || this.newGroupName.length === 0) {
+      createNewGroup () {
+        if ( !this.newGroupName || this.newGroupName.length === 0) {
           return
         }
         if (this.showNewGroup) {
-          this.shelfCategory.title = this.newGroupName
-          this.onComplete()
+          this.shelfCategory.title = this.newGroupName;
+          this.onComplete ()
         } else {
           const group = {
-            id: this.shelfList[this.shelfList.length - 2].id + 1,
+            id: this.shelfList[ this.shelfList.length - 2 ].id + 1,
             itemList: [],
             selected: false,
             title: this.newGroupName,
             type: 2
-          }
-          let list = removeAddFromShelf(this.shelfList)
-          list.push(group)
-          list = appendAddToShelf(list)
-          this.setShelfList(list).then(() => {
-            this.moveToGroup(group)
+          };
+          let list = removeAddFromShelf (this.shelfList)
+          list.push (group)
+          list = appendAddToShelf (list)
+          this.setShelfList (list).then (() => {
+            this.moveToGroup (group)
           })
         }
       },
-      onComplete() {
-        saveBookShelf(this.shelfList)
-        this.hide()
-        this.setIsEditMode(false)
+      onComplete () {
+        saveBookShelf (this.shelfList)
+        this.hide ()
+        this.setIsEditMode (false)
       }
     }
   }
@@ -173,23 +184,29 @@
     box-sizing: border-box;
     font-size: px2rem(14);
     @include scroll;
+
     .dialog-list-item {
       display: flex;
       padding: px2rem(15) 0;
       box-sizing: border-box;
       color: #666;
+
       &.is-add {
         color: $color-blue;
+
         &:active {
           color: $color-blue-transparent;
         }
       }
+
       &:active {
         color: rgba(102, 102, 102, .5)
       }
+
       .dialog-list-item-text {
         flex: 1;
       }
+
       .dialog-list-icon-wrapper {
         flex: 0 0 px2rem(30);
         color: $color-blue;
@@ -202,14 +219,17 @@
     width: 100%;
     padding: 0 px2rem(20);
     box-sizing: border-box;
+
     .dialog-input-title-wrapper {
       font-size: px2rem(10);
       margin-top: px2rem(20);
     }
+
     .dialog-input-wrapper {
       width: 100%;
       padding: 0 0 px2rem(30) 0;
       box-sizing: border-box;
+
       .dialog-input-inner-wrapper {
         display: flex;
         width: 100%;
@@ -218,17 +238,21 @@
         border-bottom: px2rem(1) solid #eee;
         font-size: px2rem(14);
         color: #666;
+
         .dialog-input {
           flex: 1;
           border: none;
+
           &:focus {
             outline: none;
           }
         }
+
         .dialog-input-clear-wrapper {
           flex: 0 0 px2rem(30);
           color: #ccc;
           @include center;
+
           &:active {
             color: #999;
           }
@@ -244,9 +268,11 @@
 
   .dialog-btn {
     flex: 1;
+
     &.is-empty {
       color: rgba(255, 255, 255, .5);
     }
+
     &:active {
       color: rgba(255, 255, 255, .5)
     }

@@ -1,7 +1,7 @@
 <template>
-  <div class="shelf-list">
+  <div class="shelf-list" :style="{top:shelfListTop}">
     <transition-group name="list" tag="div" id="shelf-list">
-      <div class="shelf-list--item-wrapper" v-for="item in shelfList" :key="item.id" :style="{height: itemHeight}">
+      <div class="shelf-list--item-wrapper" v-for="item in data" :key="item.id" :style="{height: itemHeight}">
         <shelf-item :data="item"></shelf-item>
         <div class="shelf-list-title-wrapper">
           <span class="shelf-list-title title-small">{{item.title}}</span>
@@ -14,15 +14,27 @@
 <script>
   import ShelfItem from "./ShelfItem";
   import {storeShelfMixin} from "../../utils/mixin";
-  import {realPx} from "../../utils/utils";
+  import {px2rem, realPx} from "../../utils/utils";
   import {shelf} from "../../api/store";
 
   export default {
     name: "ShelfList",
     mixins: [storeShelfMixin],
+    props: {
+      top: {
+        type: Number,
+        default: 188
+      },
+      data:{
+        type: Array
+      }
+    },
     computed: {
       itemHeight () {
         return ( ( window.innerWidth - realPx (60) ) / 3 ) / 250 * 350 + 'px';
+      },
+      shelfListTop () {
+        return px2rem (this.top) + 'rem'
       }
     },
     components: {ShelfItem}
@@ -36,13 +48,12 @@
     position: absolute;
     left: 0;
     width: 100%;
-    top: px2rem(188);
     z-index: 100;
 
     #shelf-list {
       display: flex;
       flex-flow: row wrap;
-      padding: 0 px2rem(30)
+      padding: 0 px2rem(30);
       box-sizing: border-box;
 
       .shelf-list--item-wrapper {
