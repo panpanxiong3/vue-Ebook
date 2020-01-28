@@ -37,13 +37,13 @@ export function list () {
 export function shelf () {
   return axios ({
     method: 'get',
-    url: `/book/shelf`,
+    url: `${process.env.VUE_APP_BASE_URL}/book/shelf`
   })
 }
 
 export function download ( book, onSucess, onError, onProgress ) {
   if (onProgress == null) {
-    onProgress = onError
+    onProgress = onError;
     onError = null
   }
   return axios.create ({

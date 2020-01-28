@@ -24,7 +24,7 @@ const routes = [
   {
     path: '/store',
     component: () => import('../views/store/index'),
-    redirect: '/store/home',
+    redirect: '/store/shelf',
     children: [
       {
         path: 'shelf',

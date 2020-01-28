@@ -85,6 +85,7 @@
   import {getBookShelf, saveBookShelf,} from '../../utils/localStorage'
   import {getLocalForage} from "../../utils/localForage";
   import Epub from 'epubjs'
+  import {storeShelfMixin} from "../../utils/mixin";
 
   global.ePub = Epub
 
@@ -95,6 +96,7 @@
       BookInfo,
       Toast
     },
+    mixins: [storeShelfMixin],
     computed: {
       // 获取电子书摘要
       desc () {
@@ -342,8 +344,9 @@
       }
     },
     mounted () {
-      this.init ()
+      this.init ();
       if ( !this.shelfList || this.shelfList.length === 0) {
+        this.getShelfList();
       }
     }
   }
